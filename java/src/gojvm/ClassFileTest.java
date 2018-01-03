@@ -1,4 +1,4 @@
-package gojvm
+package gojvm;
 
 public class ClassFileTest {
     
