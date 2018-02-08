@@ -45,7 +45,6 @@ func startJVM(cmd *Cmd) {
 	//}
 
 	//fmt.Printf("class data:%v\n", classData)
-	
 	//fmt.Printf("classpath:%s class:%s args:%v\n", cmd.cpOption, cmd.class, cmd.args)
 }
 
@@ -115,12 +114,11 @@ func testOperandStack(ops *rtda.OperandStack) {
 	println(ops.PopLong())
 	println(ops.PopInt())
 	println(ops.PopInt())
-	
-}	
+}
 
 func getMainMethod(cf *classfile.ClassFile) *classfile.MemberInfo {
 	for _, m := range cf.Methods() {
-		if m.Name() == "main" && m.Descriptor() == "(Ljava/lang/String;)V" {
+		if m.Name() == "main" && m.Descriptor() == "([Ljava/lang/String;)V" {
 			return m
 		}
 	}
