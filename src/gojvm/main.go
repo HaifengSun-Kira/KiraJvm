@@ -1,7 +1,7 @@
 package main
 
 import "fmt"
-//import "strings"
+import "strings"
 import "gojvm/classpath"
 import "gojvm/classfile"
 import "gojvm/rtda"
@@ -18,13 +18,19 @@ func main() {
 }
 
 func startJVM(cmd *Cmd) {
-	frame := rtda.NewFrame(100, 100)
-	testLocalVars(frame.LocalVars())
-	testOperandStack(frame.OperandStack())
+	/*frame := rtda.NewFrame(100, 100)*/
+	//testLocalVars(frame.LocalVars())
+	//testOperandStack(frame.OperandStack())
 
-	/*cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)*/
-	//className := strings.Replace(cmd.class, ".", "/", -1)
-	//cf := loadClass(className, cp)
+	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)
+	className := strings.Replace(cmd.class, ".", "/", -1)
+	cf := loadClass(className, cp)
+	mainMethod := getMainMethod(cf)
+	if mainMethod != nil {
+		interpret(mainMethod)
+	} else {
+		fmt.Printf("Main method not foune in class %s\n", cmd.class)
+	}
 	//fmt.Println(cmd.class)
 	//printClassInfo(cf)
 /*   [>/* fmt.println(cmd.xjreoption)*/
@@ -111,3 +117,13 @@ func testOperandStack(ops *rtda.OperandStack) {
 	println(ops.PopInt())
 	
 }	
+
+func getMainMethod(cf *classfile.ClassFile) *classfile.MemberInfo {
+	for _, m := range cf.Methods() {
+		if m.Name() == "main" && m.Descriptor() == "(Ljava/lang/String;)V" {
+			return m
+		}
+	}
+	return nil
+}
+
