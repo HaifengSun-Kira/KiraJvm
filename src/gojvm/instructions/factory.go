@@ -9,6 +9,7 @@ import . "gojvm/instructions/conversions"
 import . "gojvm/instructions/extended"
 import . "gojvm/instructions/loads"
 import . "gojvm/instructions/math"
+import . "gojvm/instructions/references"
 import . "gojvm/instructions/stack"
 import . "gojvm/instructions/stores"
 
@@ -181,7 +182,12 @@ func NewInstruction(opcode byte) base.Instruction {
 		return &BIPUSH{}
 	case 0x11:
 		return &SIPUSH{}
-
+	case 0x12:
+		return &LDC{}
+	case 0x13:
+		return &LDC_W{}
+	case 0x14:
+		return &LDC2_W{}
 	case 0x15:
 		return &ILOAD{}
 	case 0x16:
@@ -451,6 +457,29 @@ func NewInstruction(opcode byte) base.Instruction {
 		return &TABLE_SWITCH{}
 	case 0xab:
 		return &LOOKUP_SWITCH{}
+
+	case 0xb2:
+		return &GET_STATIC{}
+	case 0xb3:
+		return &PUT_STATIC{}
+	case 0xb4:
+		return &GET_FIELD{}
+	case 0xb5:
+		return &PUT_FIELD{}
+	case 0xb6:
+		return &INVOKE_VIRTUAL{}
+	case 0xb7:
+		return &INVOKE_SPECIAL{}
+
+	case 0xbb:
+		return &NEW{}
+
+	case 0xc0:
+		return &CHECK_CAST{}
+	case 0xc1:
+		return &INSTANCE_OF{}
+
+
 
 	case 0xc4:
 		return &WIDE{}
