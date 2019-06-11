@@ -15,7 +15,7 @@ type Cmd struct {
 
 func parseCmd() *Cmd {
 	cmd := &Cmd{}
-	
+
 	flag.Usage = printUsage
 	flag.BoolVar(&cmd.helpFlag, "help", false, "print help message")
 	flag.BoolVar(&cmd.helpFlag, "?", false, "print help message")
@@ -36,4 +36,4 @@ func parseCmd() *Cmd {
 
 func printUsage() {
 	fmt.Printf("Usage: %s [-options] class [args...]\n", os.Args[0])
-}	
+}

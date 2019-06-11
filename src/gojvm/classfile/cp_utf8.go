@@ -1,8 +1,17 @@
 package classfile
 
-import "fmt"
-import "unicode/utf16"
+import (
+	"fmt"
+	"unicode/utf16"
+)
 
+/**
+CONSTANT_Utf8_info {
+	u1 tag;
+	u2 length;
+	u1 bytes[length];
+}
+ */
 type ConstantUtf8Info struct {
 	str string
 }

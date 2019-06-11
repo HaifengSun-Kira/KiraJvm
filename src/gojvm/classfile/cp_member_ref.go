@@ -19,6 +19,27 @@ func (self *ConstantMemberrefInfo) NameAndDescriptor() (string, string) {
 	return self.cp.getNameAndType(self.nameAndTypeIndex)
 }
 
+/**
+CONSTANT_Fieldref_info {
+	u1 tag;
+	u2 class_index;
+	u2 name_and_type_index;
+}
+ */
 type ConstantFieldrefInfo struct { ConstantMemberrefInfo }
+/**
+CONSTANT_Methodref_info {
+	u1 tag;
+	u2 class_index;
+	u2 name_and_type_index;
+}
+ */
 type ConstantMethodrefInfo struct { ConstantMemberrefInfo }
+/**
+CONSTANT_InterfaceMathodref_info {
+	u1 tag;
+	u2 class_index;
+	u2 name_and_type_index;
+}
+ */
 type ConstantInterfaceMethodrefInfo struct { ConstantMemberrefInfo }

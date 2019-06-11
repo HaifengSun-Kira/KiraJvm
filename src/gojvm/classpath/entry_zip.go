@@ -26,7 +26,7 @@ func (self *ZipEntry) readClass(className string) ([]byte, Entry, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	
+
 	defer r.Close()
 
 	for _, f := range r.File {

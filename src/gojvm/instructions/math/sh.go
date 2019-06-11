@@ -54,7 +54,7 @@ func (self *LSHL) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopLong()
-	s := uint32(v2) & 0x3f // 2^6 == 32
+	s := uint32(v2) & 0x3f // 2^6 == 64
 	result := v1 << s
 	stack.PushLong(result)
 }
@@ -68,7 +68,7 @@ func (self *LSHR) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopLong()
-	s := uint32(v2) & 0x3f // 2^6 == 32
+	s := uint32(v2) & 0x3f // 2^6 == 64
 	result := v1 >> s
 	stack.PushLong(result)
 }
@@ -82,7 +82,7 @@ func (self *LUSHR) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopLong()
-	s := uint32(v2) & 0x3f // 2^6 == 32
+	s := uint32(v2) & 0x3f // 2^6 == 64
 	result := int64(uint64(v1) >> s)
 	stack.PushLong(result)
 }

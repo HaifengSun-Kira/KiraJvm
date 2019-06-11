@@ -1,10 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"gojvm/rtda/heap"
+)
 import "gojvm/instructions"
 import "gojvm/instructions/base"
 import "gojvm/rtda"
-import "gojvm/rtda/heap"
 
 func interpret(method *heap.Method) {
 	thread := rtda.NewThread()

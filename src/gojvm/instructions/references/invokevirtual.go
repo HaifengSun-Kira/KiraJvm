@@ -13,7 +13,9 @@ type INVOKE_VIRTUAL struct {
 // hack!
 func (self *INVOKE_VIRTUAL) Execute(frame *rtda.Frame) {
 	cp := frame.Method().Class().ConstantPool()
+	fmt.Println("Hello")
 	methodRef := cp.GetConstant(self.Index).(*heap.MethodRef)
+	fmt.Println(" World")
 	if methodRef.Name() == "println" {
 		stack := frame.OperandStack()
 		switch methodRef.Descriptor() {

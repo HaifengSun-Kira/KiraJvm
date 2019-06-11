@@ -1,5 +1,11 @@
 package classfile
 
+/**
+ConstantValue_attribute {
+	u2 attribute_name_index;
+	u4 attribute_length;  // must equal to 2
+	u2 constantvalue_index;}
+ */
 type ConstantValueAttribute struct {
 	constantValueIndex uint16
 }
