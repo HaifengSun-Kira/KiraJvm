@@ -21,12 +21,14 @@ func main() {
 func startJVM(cmd *Cmd) {
 	// Ch06 test case
 	cp := classpath.Parse(cmd.XjreOption, cmd.cpOption)
-	classLoader := heap.NewClassLoader(cp)
+	classLoader := heap.NewClassLoader(cp, cmd.verboseClassFlag)
 	className := strings.Replace(cmd.class, ".", "/", -1)
 	mainClass := classLoader.LoadClass(className)
+	//fmt.Printf("class.instanceSlotCount: %d\n", mainClass.InstanceSlotCount())
 	mainMethod := mainClass.GetMainMethod()
+	fmt.Println("verbose " , cmd.verboseInstFlag)
 	if mainMethod != nil {
-		interpret(mainMethod)
+		interpret(mainMethod, cmd.verboseInstFlag)
 	} else {
 		fmt.Printf("Main method not foune in class %s\n", cmd.class)
 	}

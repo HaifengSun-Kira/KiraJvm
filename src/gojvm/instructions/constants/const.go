@@ -32,7 +32,7 @@ type FCONST_0 struct {
 }
 
 func (self *FCONST_0) Execute(frame *rtda.Frame) {
-	frame.OperandStack().PushDouble(0.0)
+	frame.OperandStack().PushFloat(0.0)
 }
 
 type FCONST_1 struct {
@@ -40,7 +40,7 @@ type FCONST_1 struct {
 }
 
 func (self *FCONST_1) Execute(frame *rtda.Frame) {
-	frame.OperandStack().PushDouble(1.0)
+	frame.OperandStack().PushFloat(1.0)
 }
 
 type FCONST_2 struct {
@@ -48,7 +48,7 @@ type FCONST_2 struct {
 }
 
 func (self *FCONST_2) Execute(frame *rtda.Frame) {
-	frame.OperandStack().PushDouble(2.0)
+	frame.OperandStack().PushFloat(2.0)
 }
 
 type ICONST_M1 struct {
@@ -112,7 +112,7 @@ type LCONST_0 struct {
 }
 
 func (self *LCONST_0) Execute(frame *rtda.Frame) {
-	frame.OperandStack().PushInt(0)
+	frame.OperandStack().PushLong(0)
 }
 
 type LCONST_1 struct {
@@ -120,6 +120,6 @@ type LCONST_1 struct {
 }
 
 func (self *LCONST_1) Execute(frame *rtda.Frame) {
-	frame.OperandStack().PushInt(1)
+	frame.OperandStack().PushLong(1)
 }
 
