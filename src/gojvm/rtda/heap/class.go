@@ -98,6 +98,10 @@ func (self *Class) StartInit() {
 	self.initStarted = true
 }
 
+func (self *Class) Loader() *ClassLoader {
+	return self.loader
+}
+
 func (self *Class) isAccessibleTo(other *Class) bool {
 	return self.IsPublic() || self.GetPackageName() == other.GetPackageName()
 }
@@ -107,6 +111,19 @@ func (self *Class) GetPackageName() string {
 		return self.name[:i]
 	}
 	return ""
+}
+
+func (self *Class) getField(name, descriptor string, isStatic bool) *Field {
+	for c := self; c != nil; c = c.superClass {
+		for _, field := range c.fields {
+			if field.IsStatic() == isStatic &&
+				field.name == name &&
+				field.descriptor == descriptor {
+				return field
+			}
+		}
+	}
+	return nil
 }
 
 func (self *Class) GetMainMethod() *Method {
@@ -126,3 +143,12 @@ func (self *Class) GetClinitMethod() *Method {
 	return self.getStaticMethod("<clinit>", "()V")
 }
 
+func (self *Class) isJlObject() bool {
+	return self.name == "java/lang/Object"
+}
+func (self *Class) isJlCloneable() bool {
+	return self.name == "java/lang/Cloneable"
+}
+func (self *Class) isJioSerializable() bool {
+	return self.name == "java/io/Serializable"
+}

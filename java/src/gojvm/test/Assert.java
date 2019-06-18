@@ -1,4 +1,4 @@
-package gojvm;
+package gojvm.test;
 
 public class Assert {
 

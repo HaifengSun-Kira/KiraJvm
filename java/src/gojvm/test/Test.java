@@ -1,7 +1,7 @@
-package gojvm;
+package gojvm.test;
 
-import jvmgo.book.ch07.test.instructions.MathTest;
-import jvmgo.book.ch07.test.instructions.SwitchTest;
+import gojvm.test.instructions.MathTest;
+import gojvm.test.instructions.SwitchTest;
 
 public class Test {
 

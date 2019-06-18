@@ -1,4 +1,4 @@
-package gojvm;
+package gojvm.test.instructions;
 
 import static gojvm.test.Assert.*;
 

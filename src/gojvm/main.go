@@ -28,7 +28,7 @@ func startJVM(cmd *Cmd) {
 	mainMethod := mainClass.GetMainMethod()
 	fmt.Println("verbose " , cmd.verboseInstFlag)
 	if mainMethod != nil {
-		interpret(mainMethod, cmd.verboseInstFlag)
+		interpret(mainMethod, cmd.verboseInstFlag, cmd.args)
 	} else {
 		fmt.Printf("Main method not foune in class %s\n", cmd.class)
 	}
