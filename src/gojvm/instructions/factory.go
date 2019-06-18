@@ -12,6 +12,7 @@ import . "gojvm/instructions/math"
 import . "gojvm/instructions/references"
 import . "gojvm/instructions/stack"
 import . "gojvm/instructions/stores"
+import . "gojvm/instructions/reserved"
 
 // NoOperandsInstruction singletons
 var (
@@ -166,6 +167,8 @@ var (
 	areturn = &ARETURN{}
 	_return = &RETURN{}
 	arraylength = &ARRAY_LENGTH{}
+
+	invoke_native = &INVOKE_NATIVE{}
 )
 
 func NewInstruction(opcode byte) base.Instruction {
@@ -566,6 +569,8 @@ func NewInstruction(opcode byte) base.Instruction {
 	case 0xc8:
 		return &GOTO_W{}
 
+	case 0xfe:
+		return invoke_native
 	default:
 		panic(fmt.Errorf("Unsupported opcode: 0x%x!", opcode))
 	}

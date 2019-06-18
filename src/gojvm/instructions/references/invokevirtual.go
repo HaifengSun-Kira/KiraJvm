@@ -53,6 +53,9 @@ func (self *INVOKE_VIRTUAL) Execute(frame *rtda.Frame) {
 			_println(frame.OperandStack(), methodRef.Descriptor())
 			return
 		}
+		fmt.Println("PANIC: method name: " + methodRef.Name())
+		resolvedClass := methodRef.ResolvedClass()
+		fmt.Println("PANIC: class name: " + resolvedClass.Name())
 		panic("java.lang.NullPoniterException")
 	}
 
