@@ -19,6 +19,7 @@ type Class struct {
 	staticVars			Slots
 	initStarted bool
 	jClass *Object   // instance of java.lang.Class
+	sourceFile string
 }
 
 func newClass(cf *classfile.ClassFile) *Class {
@@ -30,7 +31,7 @@ func newClass(cf *classfile.ClassFile) *Class {
 	class.constantPool = newConstantPool(class, cf.ConstantPool())
 	class.fields = newFields(class, cf.Fields())
 	class.methods = newMethods(class, cf.Methods())
-
+	class.sourceFile = getSourceFile(cf)
 	return class
 }
 
@@ -89,6 +90,10 @@ func (self *Class) SuperClass() *Class {
 
 func (self *Class) Name() string {
 	return self.name
+}
+
+func (self *Class) SourceFile() string {
+	return self.sourceFile
 }
 
 func (self *Class) Loader() *ClassLoader {
@@ -190,4 +195,11 @@ func (self *Class) IsPrimitive() bool {
 
 func (self *Class) JavaName() string {
 	return strings.Replace(self.name, "/", ".", -1)
+}
+
+func getSourceFile(cf *classfile.ClassFile) string {
+	if sfAttr := cf.SourceFileAttribute(); sfAttr != nil {
+		return sfAttr.FileName()
+	}
+	return "Unknown" // todo
 }

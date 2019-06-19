@@ -26,7 +26,7 @@ func startJVM(cmd *Cmd) {
 	mainClass := classLoader.LoadClass(className)
 	//fmt.Printf("class.instanceSlotCount: %d\n", mainClass.InstanceSlotCount())
 	mainMethod := mainClass.GetMainMethod()
-	fmt.Println("verbose " , cmd.verboseInstFlag)
+	//fmt.Println("verbose " , cmd.verboseInstFlag)
 	if mainMethod != nil {
 		interpret(mainMethod, cmd.verboseInstFlag, cmd.args)
 	} else {
