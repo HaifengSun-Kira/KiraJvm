@@ -2,17 +2,13 @@ package references
 
 import (
 	"gojvm/instructions/base"
+	"gojvm/rtda"
 	"gojvm/rtda/heap"
 )
-import "gojvm/rtda"
 
-// invoke instance method;
-// special handling for superclass, private
-// instance initialzation method invocations
-
-type INVOKE_SPECIAL struct {
-	base.Index16Instruction
-}
+// Invoke instance method;
+// special handling for superclass, private, and instance initialization method invocations
+type INVOKE_SPECIAL struct{ base.Index16Instruction }
 
 func (self *INVOKE_SPECIAL) Execute(frame *rtda.Frame) {
 	currentClass := frame.Method().Class()
@@ -24,7 +20,7 @@ func (self *INVOKE_SPECIAL) Execute(frame *rtda.Frame) {
 		panic("java.lang.NoSuchMethodError")
 	}
 	if resolvedMethod.IsStatic() {
-		panic("java.lang.incompatibleClassChangeError")
+		panic("java.lang.IncompatibleClassChangeError")
 	}
 
 	ref := frame.OperandStack().GetRefFromTop(resolvedMethod.ArgSlotCount() - 1)
@@ -37,13 +33,15 @@ func (self *INVOKE_SPECIAL) Execute(frame *rtda.Frame) {
 		resolvedMethod.Class().GetPackageName() != currentClass.GetPackageName() &&
 		ref.Class() != currentClass &&
 		!ref.Class().IsSubClassOf(currentClass) {
+
 		panic("java.lang.IllegalAccessError")
 	}
 
 	methodToBeInvoked := resolvedMethod
 	if currentClass.IsSuper() &&
-		resolvedClass.IsSubClassOf(currentClass) &&
+		resolvedClass.IsSuperClassOf(currentClass) &&
 		resolvedMethod.Name() != "<init>" {
+
 		methodToBeInvoked = heap.LookupMethodInClass(currentClass.SuperClass(),
 			methodRef.Name(), methodRef.Descriptor())
 	}
@@ -54,4 +52,3 @@ func (self *INVOKE_SPECIAL) Execute(frame *rtda.Frame) {
 
 	base.InvokeMethod(frame, methodToBeInvoked)
 }
-

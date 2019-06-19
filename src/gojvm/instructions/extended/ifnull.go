@@ -1,11 +1,12 @@
 package extended
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+)
 
-type IFNULL struct {
-	base.BranchInstruction
-}
+// Branch if reference is null
+type IFNULL struct{ base.BranchInstruction }
 
 func (self *IFNULL) Execute(frame *rtda.Frame) {
 	ref := frame.OperandStack().PopRef()
@@ -14,9 +15,8 @@ func (self *IFNULL) Execute(frame *rtda.Frame) {
 	}
 }
 
-type IFNONNULL struct {
-	base.BranchInstruction
-}
+// Branch if reference not null
+type IFNONNULL struct{ base.BranchInstruction }
 
 func (self *IFNONNULL) Execute(frame *rtda.Frame) {
 	ref := frame.OperandStack().PopRef()

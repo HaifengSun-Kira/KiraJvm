@@ -1,11 +1,14 @@
 package extended
 
-import "gojvm/instructions/base"
-import "gojvm/instructions/loads"
-import "gojvm/instructions/math"
-import "gojvm/instructions/stores"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/instructions/loads"
+	"gojvm/instructions/math"
+	"gojvm/instructions/stores"
+	"gojvm/rtda"
+)
 
+// Extend local variable index by additional bytes
 type WIDE struct {
 	modifiedInstruction base.Instruction
 }
@@ -56,14 +59,13 @@ func (self *WIDE) FetchOperands(reader *base.BytecodeReader) {
 	case 0x84:
 		inst := &math.IINC{}
 		inst.Index = uint(reader.ReadUint16())
-		inst.Const = int32(reader.ReadUint16())
+		inst.Const = int32(reader.ReadInt16())
 		self.modifiedInstruction = inst
-	case 0xa9:
-		panic("Unsupported opcode: 0xa9 ret!")
+	case 0xa9: // ret
+		panic("Unsupported opcode: 0xa9!")
 	}
 }
 
 func (self *WIDE) Execute(frame *rtda.Frame) {
 	self.modifiedInstruction.Execute(frame)
 }
-

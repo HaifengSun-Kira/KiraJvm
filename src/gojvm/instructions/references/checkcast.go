@@ -1,12 +1,13 @@
 package references
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
-import "gojvm/rtda/heap"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+	"gojvm/rtda/heap"
+)
 
-type CHECK_CAST struct {
-	base.Index16Instruction
-}
+// Check whether object is of given type
+type CHECK_CAST struct{ base.Index16Instruction }
 
 func (self *CHECK_CAST) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -15,6 +16,7 @@ func (self *CHECK_CAST) Execute(frame *rtda.Frame) {
 	if ref == nil {
 		return
 	}
+
 	cp := frame.Method().Class().ConstantPool()
 	classRef := cp.GetConstant(self.Index).(*heap.ClassRef)
 	class := classRef.ResolvedClass()
@@ -22,4 +24,3 @@ func (self *CHECK_CAST) Execute(frame *rtda.Frame) {
 		panic("java.lang.ClassCastException")
 	}
 }
-

@@ -1,11 +1,12 @@
 package stack
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+)
 
-type DUP struct {
-	base.NoOperandsInstruction
-}
+// Duplicate the top operand stack value
+type DUP struct{ base.NoOperandsInstruction }
 
 func (self *DUP) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -14,9 +15,8 @@ func (self *DUP) Execute(frame *rtda.Frame) {
 	stack.PushSlot(slot)
 }
 
-type DUP_X1 struct {
-	base.NoOperandsInstruction
-}
+// Duplicate the top operand stack value and insert two values down
+type DUP_X1 struct{ base.NoOperandsInstruction }
 
 func (self *DUP_X1) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -27,9 +27,8 @@ func (self *DUP_X1) Execute(frame *rtda.Frame) {
 	stack.PushSlot(slot1)
 }
 
-type DUP_X2 struct {
-	base.NoOperandsInstruction
-}
+// Duplicate the top operand stack value and insert two or three values down
+type DUP_X2 struct{ base.NoOperandsInstruction }
 
 func (self *DUP_X2) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -42,9 +41,8 @@ func (self *DUP_X2) Execute(frame *rtda.Frame) {
 	stack.PushSlot(slot1)
 }
 
-type DUP2 struct {
-	base.NoOperandsInstruction
-}
+// Duplicate the top one or two operand stack values
+type DUP2 struct{ base.NoOperandsInstruction }
 
 func (self *DUP2) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -56,9 +54,8 @@ func (self *DUP2) Execute(frame *rtda.Frame) {
 	stack.PushSlot(slot1)
 }
 
-type DUP2_X1 struct {
-	base.NoOperandsInstruction
-}
+// Duplicate the top one or two operand stack values and insert two or three values down
+type DUP2_X1 struct{ base.NoOperandsInstruction }
 
 func (self *DUP2_X1) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -72,9 +69,8 @@ func (self *DUP2_X1) Execute(frame *rtda.Frame) {
 	stack.PushSlot(slot1)
 }
 
-type DUP2_X2 struct {
-	base.NoOperandsInstruction
-}
+// Duplicate the top one or two operand stack values and insert two, three, or four values down
+type DUP2_X2 struct{ base.NoOperandsInstruction }
 
 func (self *DUP2_X2) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()

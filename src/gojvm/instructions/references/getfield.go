@@ -1,17 +1,18 @@
 package references
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
-import "gojvm/rtda/heap"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+	"gojvm/rtda/heap"
+)
 
-type GET_FIELD struct {
-	base.Index16Instruction
-}
+// Fetch field from object
+type GET_FIELD struct{ base.Index16Instruction }
 
 func (self *GET_FIELD) Execute(frame *rtda.Frame) {
 	cp := frame.Method().Class().ConstantPool()
 	fieldRef := cp.GetConstant(self.Index).(*heap.FieldRef)
-	field  := fieldRef.ResolvedField()
+	field := fieldRef.ResolvedField()
 
 	if field.IsStatic() {
 		panic("java.lang.IncompatibleClassChangeError")
@@ -38,6 +39,7 @@ func (self *GET_FIELD) Execute(frame *rtda.Frame) {
 		stack.PushDouble(slots.GetDouble(slotId))
 	case 'L', '[':
 		stack.PushRef(slots.GetRef(slotId))
+	default:
+		// todo
 	}
 }
-

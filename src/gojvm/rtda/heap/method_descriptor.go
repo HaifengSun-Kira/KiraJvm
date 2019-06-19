@@ -2,10 +2,10 @@ package heap
 
 type MethodDescriptor struct {
 	parameterTypes []string
-	returnType string
+	returnType     string
 }
 
-func (self *MethodDescriptor) addParameterType (t string) {
+func (self *MethodDescriptor) addParameterType(t string) {
 	pLen := len(self.parameterTypes)
 	if pLen == cap(self.parameterTypes) {
 		s := make([]string, pLen, pLen+4)

@@ -1,5 +1,14 @@
 package heap
 
+func (self *Class) IsArray() bool {
+	return self.name[0] == '['
+}
+
+func (self *Class) ComponentClass() *Class {
+	componentClassName := getComponentClassName(self.name)
+	return self.loader.LoadClass(componentClassName)
+}
+
 func (self *Class) NewArray(count uint) *Object {
 	if !self.IsArray() {
 		panic("Not array class: " + self.name)
@@ -26,16 +35,6 @@ func (self *Class) NewArray(count uint) *Object {
 	}
 }
 
-func (self *Class) IsArray() bool {
-	return self.name[0] == '['
-}
-
-func (self *Class) ArrayClass() *Class {
-	arrayClassName := getArrayClassName(self.name)
-	return self.loader.LoadClass(arrayClassName)
-}
-
-func (self *Class) ComponentClass() *Class {
-	componentClassName := getComponentClassName(self.name)
-	return self.loader.LoadClass(componentClassName)
+func NewByteArray(loader *ClassLoader, bytes []int8) *Object {
+	return &Object{loader.LoadClass("[B"), bytes, nil}
 }

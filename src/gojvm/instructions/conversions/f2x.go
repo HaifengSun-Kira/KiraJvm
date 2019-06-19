@@ -1,11 +1,12 @@
 package conversions
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+)
 
-type F2D struct {
-	base.NoOperandsInstruction
-}
+// Convert float to double
+type F2D struct{ base.NoOperandsInstruction }
 
 func (self *F2D) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -14,9 +15,8 @@ func (self *F2D) Execute(frame *rtda.Frame) {
 	stack.PushDouble(d)
 }
 
-type F2I struct {
-	base.NoOperandsInstruction
-}
+// Convert float to int
+type F2I struct{ base.NoOperandsInstruction }
 
 func (self *F2I) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -25,9 +25,8 @@ func (self *F2I) Execute(frame *rtda.Frame) {
 	stack.PushInt(i)
 }
 
-type F2L struct {
-	base.NoOperandsInstruction
-}
+// Convert float to long
+type F2L struct{ base.NoOperandsInstruction }
 
 func (self *F2L) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -35,4 +34,3 @@ func (self *F2L) Execute(frame *rtda.Frame) {
 	l := int64(f)
 	stack.PushLong(l)
 }
-

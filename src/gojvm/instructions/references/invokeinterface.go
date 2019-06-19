@@ -6,19 +6,22 @@ import (
 	"gojvm/rtda/heap"
 )
 
+// Invoke interface method
 type INVOKE_INTERFACE struct {
-	Index uint
+	index uint
+	// count uint8
+	// zero uint8
 }
 
 func (self *INVOKE_INTERFACE) FetchOperands(reader *base.BytecodeReader) {
-	self.Index = uint(reader.ReadInt16())
-	reader.ReadInt8() // count
-	reader.ReadInt8() // must be 0
+	self.index = uint(reader.ReadUint16())
+	reader.ReadUint8() // count
+	reader.ReadUint8() // must be 0
 }
 
 func (self *INVOKE_INTERFACE) Execute(frame *rtda.Frame) {
 	cp := frame.Method().Class().ConstantPool()
-	methodRef := cp.GetConstant(self.Index).(*heap.InterfaceMethodRef)
+	methodRef := cp.GetConstant(self.index).(*heap.InterfaceMethodRef)
 	resolvedMethod := methodRef.ResolvedInterfaceMethod()
 	if resolvedMethod.IsStatic() || resolvedMethod.IsPrivate() {
 		panic("java.lang.IncompatibleClassChangeError")
@@ -26,7 +29,7 @@ func (self *INVOKE_INTERFACE) Execute(frame *rtda.Frame) {
 
 	ref := frame.OperandStack().GetRefFromTop(resolvedMethod.ArgSlotCount() - 1)
 	if ref == nil {
-		panic("java.lang.NullPointerException")
+		panic("java.lang.NullPointerException") // todo
 	}
 	if !ref.Class().IsImplements(methodRef.ResolvedClass()) {
 		panic("java.lang.IncompatibleClassChangeError")

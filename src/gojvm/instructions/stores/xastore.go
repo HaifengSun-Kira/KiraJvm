@@ -6,9 +6,8 @@ import (
 	"gojvm/rtda/heap"
 )
 
-type AASTORE struct {
-	base.NoOperandsInstruction
-}
+// Store into reference array
+type AASTORE struct{ base.NoOperandsInstruction }
 
 func (self *AASTORE) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -22,6 +21,7 @@ func (self *AASTORE) Execute(frame *rtda.Frame) {
 	refs[index] = ref
 }
 
+// Store into byte or boolean array
 type BASTORE struct{ base.NoOperandsInstruction }
 
 func (self *BASTORE) Execute(frame *rtda.Frame) {

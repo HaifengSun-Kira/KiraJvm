@@ -1,10 +1,13 @@
 package constants
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+)
 
-type NOP struct {
-	base.NoOperandsInstruction
+// Do nothing
+type NOP struct{ base.NoOperandsInstruction }
+
+func (self *NOP) Execute(frame *rtda.Frame) {
+	// really do nothing
 }
-
-func (self *NOP) Execute(frame *rtda.Frame) {}

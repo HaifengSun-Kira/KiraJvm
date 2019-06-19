@@ -12,4 +12,3 @@ func newClassRef(cp *ConstantPool, classInfo *classfile.ConstantClassInfo) *Clas
 	ref.className = classInfo.Name()
 	return ref
 }
-

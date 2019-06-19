@@ -7,7 +7,9 @@ type Instruction interface {
 	Execute(frame *rtda.Frame)
 }
 
-type NoOperandsInstruction struct {}
+type NoOperandsInstruction struct {
+	// empty
+}
 
 func (self *NoOperandsInstruction) FetchOperands(reader *BytecodeReader) {
 	// nothing to do
@@ -34,5 +36,5 @@ type Index16Instruction struct {
 }
 
 func (self *Index16Instruction) FetchOperands(reader *BytecodeReader) {
-	self.Index = uint(reader.ReadInt16())
+	self.Index = uint(reader.ReadUint16())
 }

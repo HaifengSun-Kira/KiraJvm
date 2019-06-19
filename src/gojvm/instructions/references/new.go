@@ -1,12 +1,13 @@
 package references
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
-import "gojvm/rtda/heap"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+	"gojvm/rtda/heap"
+)
 
-type NEW struct {
-	base.Index16Instruction
-}
+// Create new object
+type NEW struct{ base.Index16Instruction }
 
 func (self *NEW) Execute(frame *rtda.Frame) {
 	cp := frame.Method().Class().ConstantPool()
@@ -17,10 +18,11 @@ func (self *NEW) Execute(frame *rtda.Frame) {
 		base.InitClass(frame.Thread(), class)
 		return
 	}
+
 	if class.IsInterface() || class.IsAbstract() {
 		panic("java.lang.InstantiationError")
 	}
+
 	ref := class.NewObject()
 	frame.OperandStack().PushRef(ref)
 }
-

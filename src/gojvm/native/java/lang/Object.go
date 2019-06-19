@@ -11,6 +11,7 @@ func init() {
 	native.Register(jlObject, "getClass", "()Ljava/lang/Class;", getClass)
 	native.Register(jlObject, "hashCode", "()I", hashCode)
 	native.Register(jlObject, "clone", "()Ljava/lang/Object;", clone)
+	native.Register(jlObject, "notifyAll", "()V", notifyAll)
 }
 
 // public final native Class<?> getClass();
@@ -37,4 +38,10 @@ func clone(frame *rtda.Frame) {
 	}
 
 	frame.OperandStack().PushRef(this.Clone())
+}
+
+// public final native void notifyAll();
+// ()V
+func notifyAll(frame *rtda.Frame) {
+	// todo
 }

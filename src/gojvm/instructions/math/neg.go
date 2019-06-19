@@ -1,11 +1,12 @@
 package math
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+)
 
-type DNEG struct {
-	base.NoOperandsInstruction
-}
+// Negate double
+type DNEG struct{ base.NoOperandsInstruction }
 
 func (self *DNEG) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -13,9 +14,8 @@ func (self *DNEG) Execute(frame *rtda.Frame) {
 	stack.PushDouble(-val)
 }
 
-type FNEG struct {
-	base.NoOperandsInstruction
-}
+// Negate float
+type FNEG struct{ base.NoOperandsInstruction }
 
 func (self *FNEG) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -23,9 +23,8 @@ func (self *FNEG) Execute(frame *rtda.Frame) {
 	stack.PushFloat(-val)
 }
 
-type INEG struct {
-	base.NoOperandsInstruction
-}
+// Negate int
+type INEG struct{ base.NoOperandsInstruction }
 
 func (self *INEG) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -33,13 +32,11 @@ func (self *INEG) Execute(frame *rtda.Frame) {
 	stack.PushInt(-val)
 }
 
-type LNEG struct {
-	base.NoOperandsInstruction
-}
+// Negate long
+type LNEG struct{ base.NoOperandsInstruction }
 
 func (self *LNEG) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
 	val := stack.PopLong()
 	stack.PushLong(-val)
 }
-

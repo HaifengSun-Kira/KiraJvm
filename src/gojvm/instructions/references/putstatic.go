@@ -1,12 +1,13 @@
 package references
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
-import "gojvm/rtda/heap"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+	"gojvm/rtda/heap"
+)
 
-type PUT_STATIC struct {
-	base.Index16Instruction
-}
+// Set static field in class
+type PUT_STATIC struct{ base.Index16Instruction }
 
 func (self *PUT_STATIC) Execute(frame *rtda.Frame) {
 	currentMethod := frame.Method()
@@ -29,10 +30,12 @@ func (self *PUT_STATIC) Execute(frame *rtda.Frame) {
 			panic("java.lang.IllegalAccessError")
 		}
 	}
+
 	descriptor := field.Descriptor()
 	slotId := field.SlotId()
 	slots := class.StaticVars()
 	stack := frame.OperandStack()
+
 	switch descriptor[0] {
 	case 'Z', 'B', 'C', 'S', 'I':
 		slots.SetInt(slotId, stack.PopInt())
@@ -44,6 +47,7 @@ func (self *PUT_STATIC) Execute(frame *rtda.Frame) {
 		slots.SetDouble(slotId, stack.PopDouble())
 	case 'L', '[':
 		slots.SetRef(slotId, stack.PopRef())
+	default:
+		// todo
 	}
 }
-

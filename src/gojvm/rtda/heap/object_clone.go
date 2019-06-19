@@ -3,10 +3,9 @@ package heap
 func (self *Object) Clone() *Object {
 	return &Object{
 		class: self.class,
-		data: self.cloneData(),
+		data:  self.cloneData(),
 	}
 }
-
 
 func (self *Object) cloneData() interface{} {
 	switch self.data.(type) {
@@ -57,4 +56,3 @@ func (self *Object) cloneData() interface{} {
 		return slots2
 	}
 }
-

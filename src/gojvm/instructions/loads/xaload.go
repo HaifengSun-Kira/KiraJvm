@@ -6,9 +6,8 @@ import (
 	"gojvm/rtda/heap"
 )
 
-type AALOAD struct {
-	base.NoOperandsInstruction
-}
+// Load reference from array
+type AALOAD struct{ base.NoOperandsInstruction }
 
 func (self *AALOAD) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -21,9 +20,8 @@ func (self *AALOAD) Execute(frame *rtda.Frame) {
 	stack.PushRef(refs[index])
 }
 
-type BALOAD struct {
-	base.NoOperandsInstruction
-}
+// Load byte or boolean from array
+type BALOAD struct{ base.NoOperandsInstruction }
 
 func (self *BALOAD) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -36,9 +34,8 @@ func (self *BALOAD) Execute(frame *rtda.Frame) {
 	stack.PushInt(int32(bytes[index]))
 }
 
-type CALOAD struct {
-	base.NoOperandsInstruction
-}
+// Load char from array
+type CALOAD struct{ base.NoOperandsInstruction }
 
 func (self *CALOAD) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -51,9 +48,8 @@ func (self *CALOAD) Execute(frame *rtda.Frame) {
 	stack.PushInt(int32(chars[index]))
 }
 
-type DALOAD struct {
-	base.NoOperandsInstruction
-}
+// Load double from array
+type DALOAD struct{ base.NoOperandsInstruction }
 
 func (self *DALOAD) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -66,9 +62,8 @@ func (self *DALOAD) Execute(frame *rtda.Frame) {
 	stack.PushDouble(doubles[index])
 }
 
-type FALOAD struct {
-	base.NoOperandsInstruction
-}
+// Load float from array
+type FALOAD struct{ base.NoOperandsInstruction }
 
 func (self *FALOAD) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -81,9 +76,8 @@ func (self *FALOAD) Execute(frame *rtda.Frame) {
 	stack.PushFloat(floats[index])
 }
 
-type IALOAD struct {
-	base.NoOperandsInstruction
-}
+// Load int from array
+type IALOAD struct{ base.NoOperandsInstruction }
 
 func (self *IALOAD) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -96,9 +90,8 @@ func (self *IALOAD) Execute(frame *rtda.Frame) {
 	stack.PushInt(ints[index])
 }
 
-type LALOAD struct {
-	base.NoOperandsInstruction
-}
+// Load long from array
+type LALOAD struct{ base.NoOperandsInstruction }
 
 func (self *LALOAD) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -111,9 +104,8 @@ func (self *LALOAD) Execute(frame *rtda.Frame) {
 	stack.PushLong(longs[index])
 }
 
-type SALOAD struct {
-	base.NoOperandsInstruction
-}
+// Load short from array
+type SALOAD struct{ base.NoOperandsInstruction }
 
 func (self *SALOAD) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -131,9 +123,8 @@ func checkNotNil(ref *heap.Object) {
 		panic("java.lang.NullPointerException")
 	}
 }
-
 func checkIndex(arrLen int, index int32) {
-	if index < 0 || index > int32(arrLen) {
-		panic("java.lang.ArrayIndexOutOfBoundsException")
+	if index < 0 || index >= int32(arrLen) {
+		panic("ArrayIndexOutOfBoundsException")
 	}
 }

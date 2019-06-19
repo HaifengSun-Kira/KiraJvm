@@ -7,16 +7,18 @@ import (
 )
 
 const (
+	//Array Type  atype
 	AT_BOOLEAN = 4
-	AT_CHAR = 5
-	AT_FLOAT = 6
-	AT_DOUBLE = 7
-	AT_BYTE = 8
-	AT_SHORT = 9
-	AT_INT = 10
-	AT_LONG = 11
+	AT_CHAR    = 5
+	AT_FLOAT   = 6
+	AT_DOUBLE  = 7
+	AT_BYTE    = 8
+	AT_SHORT   = 9
+	AT_INT     = 10
+	AT_LONG    = 11
 )
 
+// Create new array
 type NEW_ARRAY struct {
 	atype uint8
 }
@@ -24,7 +26,6 @@ type NEW_ARRAY struct {
 func (self *NEW_ARRAY) FetchOperands(reader *base.BytecodeReader) {
 	self.atype = reader.ReadUint8()
 }
-
 func (self *NEW_ARRAY) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
 	count := stack.PopInt()

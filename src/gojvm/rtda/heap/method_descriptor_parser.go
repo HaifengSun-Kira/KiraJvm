@@ -3,7 +3,7 @@ package heap
 import "strings"
 
 type MethodDescriptorParser struct {
-	raw string
+	raw    string
 	offset int
 	parsed *MethodDescriptor
 }
@@ -29,11 +29,19 @@ func (self *MethodDescriptorParser) startParams() {
 		self.causePanic()
 	}
 }
-
 func (self *MethodDescriptorParser) endParams() {
 	if self.readUint8() != ')' {
 		self.causePanic()
 	}
+}
+func (self *MethodDescriptorParser) finish() {
+	if self.offset != len(self.raw) {
+		self.causePanic()
+	}
+}
+
+func (self *MethodDescriptorParser) causePanic() {
+	panic("BAD descriptor: " + self.raw)
 }
 
 func (self *MethodDescriptorParser) readUint8() uint8 {
@@ -41,13 +49,8 @@ func (self *MethodDescriptorParser) readUint8() uint8 {
 	self.offset++
 	return b
 }
-
 func (self *MethodDescriptorParser) unreadUint8() {
 	self.offset--
-}
-
-func (self *MethodDescriptorParser) causePanic() {
-	panic("BAD Descriptor: " + self.raw)
 }
 
 func (self *MethodDescriptorParser) parseParamTypes() {
@@ -61,7 +64,23 @@ func (self *MethodDescriptorParser) parseParamTypes() {
 	}
 }
 
-func (self *MethodDescriptorParser) parseFieldType() string{
+func (self *MethodDescriptorParser) parseReturnType() {
+	if self.readUint8() == 'V' {
+		self.parsed.returnType = "V"
+		return
+	}
+
+	self.unreadUint8()
+	t := self.parseFieldType()
+	if t != "" {
+		self.parsed.returnType = t
+		return
+	}
+
+	self.causePanic()
+}
+
+func (self *MethodDescriptorParser) parseFieldType() string {
 	switch self.readUint8() {
 	case 'B':
 		return "B"
@@ -97,7 +116,7 @@ func (self *MethodDescriptorParser) parseObjectType() string {
 		return ""
 	} else {
 		objStart := self.offset - 1
-		objEnd := self.offset +semicolonIndex + 1
+		objEnd := self.offset + semicolonIndex + 1
 		self.offset = objEnd
 		descriptor := self.raw[objStart:objEnd]
 		return descriptor
@@ -105,31 +124,9 @@ func (self *MethodDescriptorParser) parseObjectType() string {
 }
 
 func (self *MethodDescriptorParser) parseArrayType() string {
-	arrStart := self.offset -1
+	arrStart := self.offset - 1
 	self.parseFieldType()
 	arrEnd := self.offset
 	descriptor := self.raw[arrStart:arrEnd]
 	return descriptor
-}
-
-func (self *MethodDescriptorParser) parseReturnType() {
-	if self.readUint8() == 'V' {
-		self.parsed.returnType = "V"
-		return
-	}
-
-	self.unreadUint8()
-	t := self.parseFieldType()
-	if t != "" {
-		self.parsed.returnType = t
-		return
-	}
-
-	self.causePanic()
-}
-
-func (self *MethodDescriptorParser) finish() {
-	if self.offset != len(self.raw) {
-		self.causePanic()
-	}
 }

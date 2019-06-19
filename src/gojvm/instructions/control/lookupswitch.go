@@ -1,12 +1,28 @@
 package control
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+)
 
+/*
+lookupswitch
+<0-3 byte pad>
+defaultbyte1
+defaultbyte2
+defaultbyte3
+defaultbyte4
+npairs1
+npairs2
+npairs3
+npairs4
+match-offset pairs...
+*/
+// Access jump table by key match and jump
 type LOOKUP_SWITCH struct {
-	defaultOffset	int32
-	npairs			int32
-	matchOffsets	[]int32
+	defaultOffset int32
+	npairs        int32
+	matchOffsets  []int32
 }
 
 func (self *LOOKUP_SWITCH) FetchOperands(reader *base.BytecodeReader) {
@@ -18,7 +34,7 @@ func (self *LOOKUP_SWITCH) FetchOperands(reader *base.BytecodeReader) {
 
 func (self *LOOKUP_SWITCH) Execute(frame *rtda.Frame) {
 	key := frame.OperandStack().PopInt()
-	for i := int32(0); i < self.npairs*2; i+= 2 {
+	for i := int32(0); i < self.npairs*2; i += 2 {
 		if self.matchOffsets[i] == key {
 			offset := self.matchOffsets[i+1]
 			base.Branch(frame, int(offset))
@@ -27,4 +43,3 @@ func (self *LOOKUP_SWITCH) Execute(frame *rtda.Frame) {
 	}
 	base.Branch(frame, int(self.defaultOffset))
 }
-

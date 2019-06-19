@@ -1,19 +1,18 @@
 package comparisons
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+)
 
-type DCMPG struct {
-	base.NoOperandsInstruction
-}
+// Compare double
+type DCMPG struct{ base.NoOperandsInstruction }
 
 func (self *DCMPG) Execute(frame *rtda.Frame) {
 	_dcmp(frame, true)
 }
 
-type DCMPL struct {
-	base.NoOperandsInstruction
-}
+type DCMPL struct{ base.NoOperandsInstruction }
 
 func (self *DCMPL) Execute(frame *rtda.Frame) {
 	_dcmp(frame, false)

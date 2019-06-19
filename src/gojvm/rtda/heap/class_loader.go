@@ -1,20 +1,29 @@
 package heap
 
-import "fmt"
-import "gojvm/classfile"
-import "gojvm/classpath"
+import (
+	"fmt"
+	"gojvm/classfile"
+	"gojvm/classpath"
+)
 
+/*
+class names:
+    - primitive types: boolean, byte, int ...
+    - primitive arrays: [Z, [B, [I ...
+    - non-array classes: java/lang/Object ...
+    - array classes: [Ljava/lang/Object; ...
+*/
 type ClassLoader struct {
-	cp			*classpath.Classpath
-	classMap	map[string]*Class
+	cp          *classpath.Classpath
 	verboseFlag bool
+	classMap    map[string]*Class // loaded classes
 }
 
 func NewClassLoader(cp *classpath.Classpath, verboseFlag bool) *ClassLoader {
 	loader := &ClassLoader{
-		cp:			cp,
-		classMap:	make(map[string]*Class),
+		cp:          cp,
 		verboseFlag: verboseFlag,
+		classMap:    make(map[string]*Class),
 	}
 
 	loader.loadBasicClasses()
@@ -23,10 +32,10 @@ func NewClassLoader(cp *classpath.Classpath, verboseFlag bool) *ClassLoader {
 }
 
 func (self *ClassLoader) loadBasicClasses() {
-	JLClass_class := self.LoadClass("java/lang/Class")
+	jlClassClass := self.LoadClass("java/lang/Class")
 	for _, class := range self.classMap {
 		if class.jClass == nil {
-			class.jClass = JLClass_class.NewObject()
+			class.jClass = jlClassClass.NewObject()
 			class.jClass.extra = class
 		}
 	}
@@ -34,15 +43,15 @@ func (self *ClassLoader) loadBasicClasses() {
 
 func (self *ClassLoader) loadPrimitiveClasses() {
 	for primitiveType, _ := range primitiveTypes {
-		self.loadPrimitiveClass(primitiveType)  // void, int, float, etc.
+		self.loadPrimitiveClass(primitiveType)
 	}
 }
 
 func (self *ClassLoader) loadPrimitiveClass(className string) {
-	class := &Class {
-		accessFlags: ACC_PUBLIC,
-		name: className,
-		loader: self,
+	class := &Class{
+		accessFlags: ACC_PUBLIC, // todo
+		name:        className,
+		loader:      self,
 		initStarted: true,
 	}
 	class.jClass = self.classMap["java/lang/Class"].NewObject()
@@ -52,21 +61,38 @@ func (self *ClassLoader) loadPrimitiveClass(className string) {
 
 func (self *ClassLoader) LoadClass(name string) *Class {
 	if class, ok := self.classMap[name]; ok {
-		return class  // already loaded
+		// already loaded
+		return class
 	}
 
 	var class *Class
-	if name[0] == '[' {
+	if name[0] == '[' { // array class
 		class = self.loadArrayClass(name)
 	} else {
 		class = self.loadNonArrayClass(name)
 	}
 
-	if JLClass_class, ok := self.classMap["java/lang/Class"]; ok {
-		class.jClass = JLClass_class.NewObject()
+	if jlClassClass, ok := self.classMap["java/lang/Class"]; ok {
+		class.jClass = jlClassClass.NewObject()
 		class.jClass.extra = class
 	}
 
+	return class
+}
+
+func (self *ClassLoader) loadArrayClass(name string) *Class {
+	class := &Class{
+		accessFlags: ACC_PUBLIC, // todo
+		name:        name,
+		loader:      self,
+		initStarted: true,
+		superClass:  self.LoadClass("java/lang/Object"),
+		interfaces: []*Class{
+			self.LoadClass("java/lang/Cloneable"),
+			self.LoadClass("java/io/Serializable"),
+		},
+	}
+	self.classMap[name] = class
 	return class
 }
 
@@ -74,9 +100,11 @@ func (self *ClassLoader) loadNonArrayClass(name string) *Class {
 	data, entry := self.readClass(name)
 	class := self.defineClass(data)
 	link(class)
+
 	if self.verboseFlag {
 		fmt.Printf("[Loaded %s from %s]\n", name, entry)
 	}
+
 	return class
 }
 
@@ -88,8 +116,10 @@ func (self *ClassLoader) readClass(name string) ([]byte, classpath.Entry) {
 	return data, entry
 }
 
+// jvms 5.3.5
 func (self *ClassLoader) defineClass(data []byte) *Class {
 	class := parseClass(data)
+	hackClass(class)
 	class.loader = self
 	resolveSuperClass(class)
 	resolveInterfaces(class)
@@ -100,17 +130,18 @@ func (self *ClassLoader) defineClass(data []byte) *Class {
 func parseClass(data []byte) *Class {
 	cf, err := classfile.Parse(data)
 	if err != nil {
-		panic("java.lang.ClassFormatError")
+		//panic("java.lang.ClassFormatError")
+		panic(err)
 	}
 	return newClass(cf)
 }
 
+// jvms 5.4.3.1
 func resolveSuperClass(class *Class) {
 	if class.name != "java/lang/Object" {
 		class.superClass = class.loader.LoadClass(class.superClassName)
 	}
 }
-
 func resolveInterfaces(class *Class) {
 	interfaceCount := len(class.interfaceNames)
 	if interfaceCount > 0 {
@@ -130,6 +161,7 @@ func verify(class *Class) {
 	// todo
 }
 
+// jvms 5.4.2
 func prepare(class *Class) {
 	calcInstanceFieldSlotIds(class)
 	calcStaticFieldSlotIds(class)
@@ -179,8 +211,9 @@ func allocAndInitStaticVars(class *Class) {
 func initStaticFinalVar(class *Class, field *Field) {
 	vars := class.staticVars
 	cp := class.constantPool
-	cpIndex := field.ConstantValueIndex()
+	cpIndex := field.ConstValueIndex()
 	slotId := field.SlotId()
+
 	if cpIndex > 0 {
 		switch field.Descriptor() {
 		case "Z", "B", "C", "S", "I":
@@ -195,7 +228,7 @@ func initStaticFinalVar(class *Class, field *Field) {
 		case "D":
 			val := cp.GetConstant(cpIndex).(float64)
 			vars.SetDouble(slotId, val)
-		case "Ljava/lang/String;" :
+		case "Ljava/lang/String;":
 			goStr := cp.GetConstant(cpIndex).(string)
 			jStr := JString(class.Loader(), goStr)
 			vars.SetRef(slotId, jStr)
@@ -203,18 +236,10 @@ func initStaticFinalVar(class *Class, field *Field) {
 	}
 }
 
-func (self *ClassLoader) loadArrayClass(name string) *Class {
-	class := &Class{
-		accessFlags:	ACC_PUBLIC, // todo
-		name:				name,
-		loader:				self,
-		initStarted:		true,
-		superClass:		self.LoadClass("java/lang/Object"),
-		interfaces:		[]*Class {
-			self.LoadClass("java/lang/Cloneable"),
-			self.LoadClass("java/io/Serializable"),
-		},
+// todo
+func hackClass(class *Class) {
+	if class.name == "java/lang/ClassLoader" {
+		loadLibrary := class.GetStaticMethod("loadLibrary", "(Ljava/lang/Class;Ljava/lang/String;Z)V")
+		loadLibrary.code = []byte{0xb1} // return void
 	}
-	self.classMap[name] = class
-	return class
 }

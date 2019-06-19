@@ -7,9 +7,8 @@ import (
 	"reflect"
 )
 
-type ATHROW struct {
-	base.NoOperandsInstruction
-}
+// Throw exception or error
+type ATHROW struct{ base.NoOperandsInstruction }
 
 func (self *ATHROW) Execute(frame *rtda.Frame) {
 	ex := frame.OperandStack().PopRef()
@@ -23,10 +22,11 @@ func (self *ATHROW) Execute(frame *rtda.Frame) {
 	}
 }
 
-func findAndGotoExceptionHandler(thread *rtda.Thread, ex * heap.Object) bool {
+func findAndGotoExceptionHandler(thread *rtda.Thread, ex *heap.Object) bool {
 	for {
 		frame := thread.CurrentFrame()
 		pc := frame.NextPC() - 1
+
 		handlerPC := frame.Method().FindExceptionHandler(ex.Class(), pc)
 		if handlerPC > 0 {
 			stack := frame.OperandStack()
@@ -44,6 +44,7 @@ func findAndGotoExceptionHandler(thread *rtda.Thread, ex * heap.Object) bool {
 	return false
 }
 
+// todo
 func handleUncaughtException(thread *rtda.Thread, ex *heap.Object) {
 	thread.ClearStack()
 

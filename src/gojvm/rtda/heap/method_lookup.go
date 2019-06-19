@@ -11,17 +11,19 @@ func LookupMethodInClass(class *Class, name, descriptor string) *Method {
 	return nil
 }
 
-func LookupMethodInInterfaces(ifaces []*Class, name, descriptor string) *Method {
+func lookupMethodInInterfaces(ifaces []*Class, name, descriptor string) *Method {
 	for _, iface := range ifaces {
 		for _, method := range iface.methods {
 			if method.name == name && method.descriptor == descriptor {
 				return method
 			}
 		}
-		method := LookupMethodInInterfaces(iface.interfaces, name, descriptor)
+
+		method := lookupMethodInInterfaces(iface.interfaces, name, descriptor)
 		if method != nil {
 			return method
 		}
 	}
+
 	return nil
 }

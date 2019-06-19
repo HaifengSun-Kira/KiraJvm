@@ -1,11 +1,12 @@
 package math
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+)
 
-type DSUB struct {
-	base.NoOperandsInstruction
-}
+// Subtract double
+type DSUB struct{ base.NoOperandsInstruction }
 
 func (self *DSUB) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -15,21 +16,19 @@ func (self *DSUB) Execute(frame *rtda.Frame) {
 	stack.PushDouble(result)
 }
 
-type FSUB struct {
-	base.NoOperandsInstruction
-}
+// Subtract float
+type FSUB struct{ base.NoOperandsInstruction }
 
 func (self *FSUB) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
 	v2 := stack.PopFloat()
-	v1:= stack.PopFloat()
+	v1 := stack.PopFloat()
 	result := v1 - v2
 	stack.PushFloat(result)
 }
 
-type ISUB struct {
-	base.NoOperandsInstruction
-}
+// Subtract int
+type ISUB struct{ base.NoOperandsInstruction }
 
 func (self *ISUB) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -39,9 +38,8 @@ func (self *ISUB) Execute(frame *rtda.Frame) {
 	stack.PushInt(result)
 }
 
-type LSUB struct {
-	base.NoOperandsInstruction
-}
+// Subtract long
+type LSUB struct{ base.NoOperandsInstruction }
 
 func (self *LSUB) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -50,4 +48,3 @@ func (self *LSUB) Execute(frame *rtda.Frame) {
 	result := v1 - v2
 	stack.PushLong(result)
 }
-

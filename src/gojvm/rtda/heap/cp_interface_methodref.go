@@ -21,10 +21,10 @@ func (self *InterfaceMethodRef) ResolvedInterfaceMethod() *Method {
 	return self.method
 }
 
+// jvms8 5.4.3.4
 func (self *InterfaceMethodRef) resolveInterfaceMethodRef() {
 	d := self.cp.class
 	c := self.ResolvedClass()
-
 	if !c.IsInterface() {
 		panic("java.lang.IncompatibleClassChangeError")
 	}
@@ -40,11 +40,13 @@ func (self *InterfaceMethodRef) resolveInterfaceMethodRef() {
 	self.method = method
 }
 
+// todo
 func lookupInterfaceMethod(iface *Class, name, descriptor string) *Method {
 	for _, method := range iface.methods {
 		if method.name == name && method.descriptor == descriptor {
 			return method
 		}
 	}
-	return LookupMethodInInterfaces(iface.interfaces, name, descriptor)
+
+	return lookupMethodInInterfaces(iface.interfaces, name, descriptor)
 }

@@ -1,12 +1,13 @@
 package references
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
-import "gojvm/rtda/heap"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+	"gojvm/rtda/heap"
+)
 
-type GET_STATIC struct {
-	base.Index16Instruction
-}
+// Get static field from class
+type GET_STATIC struct{ base.Index16Instruction }
 
 func (self *GET_STATIC) Execute(frame *rtda.Frame) {
 	cp := frame.Method().Class().ConstantPool()
@@ -20,12 +21,14 @@ func (self *GET_STATIC) Execute(frame *rtda.Frame) {
 	}
 
 	if !field.IsStatic() {
-		panic("java.lang.IncompatibleClass")
+		panic("java.lang.IncompatibleClassChangeError")
 	}
+
 	descriptor := field.Descriptor()
 	slotId := field.SlotId()
 	slots := class.StaticVars()
 	stack := frame.OperandStack()
+
 	switch descriptor[0] {
 	case 'Z', 'B', 'C', 'S', 'I':
 		stack.PushInt(slots.GetInt(slotId))
@@ -37,6 +40,7 @@ func (self *GET_STATIC) Execute(frame *rtda.Frame) {
 		stack.PushDouble(slots.GetDouble(slotId))
 	case 'L', '[':
 		stack.PushRef(slots.GetRef(slotId))
+	default:
+		// todo
 	}
 }
-

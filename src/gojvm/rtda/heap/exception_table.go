@@ -5,9 +5,9 @@ import "gojvm/classfile"
 type ExceptionTable []*ExceptionHandler
 
 type ExceptionHandler struct {
-	startPC int
-	endPC int
-	handlerPC int
+	startPc   int
+	endPc     int
+	handlerPc int
 	catchType *ClassRef
 }
 
@@ -15,27 +15,29 @@ func newExceptionTable(entries []*classfile.ExceptionTableEntry, cp *ConstantPoo
 	table := make([]*ExceptionHandler, len(entries))
 	for i, entry := range entries {
 		table[i] = &ExceptionHandler{
-			startPC: int(entry.StartPc()),
-			endPC: int(entry.EndPc()),
-			handlerPC: int(entry.HandlerPc()),
+			startPc:   int(entry.StartPc()),
+			endPc:     int(entry.EndPc()),
+			handlerPc: int(entry.HandlerPc()),
 			catchType: getCatchType(uint(entry.CatchType()), cp),
 		}
 	}
+
 	return table
 }
 
 func getCatchType(index uint, cp *ConstantPool) *ClassRef {
 	if index == 0 {
-		return nil
+		return nil // catch all
 	}
 	return cp.GetConstant(index).(*ClassRef)
 }
 
 func (self ExceptionTable) findExceptionHandler(exClass *Class, pc int) *ExceptionHandler {
 	for _, handler := range self {
-		if pc >= handler.startPC && pc < handler.endPC {
+		// jvms: The start_pc is inclusive and end_pc is exclusive
+		if pc >= handler.startPc && pc < handler.endPc {
 			if handler.catchType == nil {
-				return handler  // catch-all -> finally
+				return handler
 			}
 			catchClass := handler.catchType.ResolvedClass()
 			if catchClass == exClass || catchClass.IsSuperClassOf(exClass) {

@@ -6,8 +6,9 @@ import (
 	"gojvm/rtda/heap"
 )
 
+// Create new multidimensional array
 type MULTI_ANEW_ARRAY struct {
-	index uint16
+	index      uint16
 	dimensions uint8
 }
 
@@ -15,7 +16,6 @@ func (self *MULTI_ANEW_ARRAY) FetchOperands(reader *base.BytecodeReader) {
 	self.index = reader.ReadUint16()
 	self.dimensions = reader.ReadUint8()
 }
-
 func (self *MULTI_ANEW_ARRAY) Execute(frame *rtda.Frame) {
 	cp := frame.Method().Class().ConstantPool()
 	classRef := cp.GetConstant(uint(self.index)).(*heap.ClassRef)
@@ -35,6 +35,7 @@ func popAndCheckCounts(stack *rtda.OperandStack, dimensions int) []int32 {
 			panic("java.lang.NegativeArraySizeException")
 		}
 	}
+
 	return counts
 }
 

@@ -1,13 +1,14 @@
 package comparisons
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+)
 
-type LCMP struct {
-	base.NoOperandsInstruction
-}
+// Compare long
+type LCMP struct{ base.NoOperandsInstruction }
 
-func (self *LCMP) Execute(frame *rtda.Frame) { 
+func (self *LCMP) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
 	v2 := stack.PopLong()
 	v1 := stack.PopLong()

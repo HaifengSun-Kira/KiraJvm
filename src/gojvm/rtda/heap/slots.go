@@ -59,4 +59,3 @@ func (self Slots) SetRef(index uint, ref *Object) {
 func (self Slots) GetRef(index uint) *Object {
 	return self[index].ref
 }
-

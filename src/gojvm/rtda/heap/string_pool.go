@@ -4,41 +4,48 @@ import "unicode/utf16"
 
 var internedStrings = map[string]*Object{}
 
-func JString(loader *ClassLoader, goString string) *Object {
-	if internedStr, ok := internedStrings[goString]; ok {
+// todo
+// go string -> java.lang.String
+func JString(loader *ClassLoader, goStr string) *Object {
+	if internedStr, ok := internedStrings[goStr]; ok {
 		return internedStr
 	}
 
-	chars := stringToUtf16(goString)
+	chars := stringToUtf16(goStr)
 	jChars := &Object{loader.LoadClass("[C"), chars, nil}
 
 	jStr := loader.LoadClass("java/lang/String").NewObject()
 	jStr.SetRefVar("value", "[C", jChars)
 
-	internedStrings[goString] = jStr
+	internedStrings[goStr] = jStr
 	return jStr
 }
 
-func stringToUtf16(s string) []uint16 {
-	runes := []rune(s) // utf32
-	return utf16.Encode(runes)
-}
-
-func utf16ToString(s []uint16) string {
-	runes := utf16.Decode(s)  // utf8
-	return string(runes)
-}
-
+// java.lang.String -> go string
 func GoString(jStr *Object) string {
 	charArr := jStr.GetRefVar("value", "[C")
 	return utf16ToString(charArr.Chars())
 }
 
+// utf8 -> utf16
+func stringToUtf16(s string) []uint16 {
+	runes := []rune(s)         // utf32
+	return utf16.Encode(runes) // func Encode(s []rune) []uint16
+}
+
+// utf16 -> utf8
+func utf16ToString(s []uint16) string {
+	runes := utf16.Decode(s) // func Decode(s []uint16) []rune
+	return string(runes)
+}
+
+// todo
 func InternString(jStr *Object) *Object {
 	goStr := GoString(jStr)
 	if internedStr, ok := internedStrings[goStr]; ok {
 		return internedStr
 	}
+
 	internedStrings[goStr] = jStr
 	return jStr
 }

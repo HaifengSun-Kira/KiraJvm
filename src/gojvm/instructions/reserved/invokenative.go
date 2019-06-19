@@ -5,12 +5,16 @@ import (
 	"gojvm/native"
 	"gojvm/rtda"
 )
+import _ "gojvm/native/java/io"
 import _ "gojvm/native/java/lang"
+import _ "gojvm/native/java/security"
+import _ "gojvm/native/java/util/concurrent/atomic"
+import _ "gojvm/native/sun/io"
 import _ "gojvm/native/sun/misc"
+import _ "gojvm/native/sun/reflect"
 
-type INVOKE_NATIVE struct {
-	base.NoOperandsInstruction
-}
+// Invoke native method
+type INVOKE_NATIVE struct{ base.NoOperandsInstruction }
 
 func (self *INVOKE_NATIVE) Execute(frame *rtda.Frame) {
 	method := frame.Method()

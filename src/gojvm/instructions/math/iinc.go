@@ -1,8 +1,11 @@
 package math
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+)
 
+// Increment local variable by constant
 type IINC struct {
 	Index uint
 	Const int32
@@ -19,4 +22,3 @@ func (self *IINC) Execute(frame *rtda.Frame) {
 	val += self.Const
 	localVars.SetInt(self.Index, val)
 }
-

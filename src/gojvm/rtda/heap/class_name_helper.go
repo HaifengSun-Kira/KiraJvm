@@ -1,15 +1,15 @@
 package heap
 
-var primitiveTypes = map[string]string {
-	"void":			"V",
-	"boolean":	"Z",
-	"byte":			"B",
-	"short":		"S",
-	"int":			"I",
-	"long":			"J",
-	"char":			"C",
-	"float":		"F",
-	"double":		"D",
+var primitiveTypes = map[string]string{
+	"void":    "V",
+	"boolean": "Z",
+	"byte":    "B",
+	"short":   "S",
+	"int":     "I",
+	"long":    "J",
+	"char":    "C",
+	"float":   "F",
+	"double":  "D",
 }
 
 // [XXX -> [[XXX
@@ -17,6 +17,17 @@ var primitiveTypes = map[string]string {
 // XXX -> [LXXX;
 func getArrayClassName(className string) string {
 	return "[" + toDescriptor(className)
+}
+
+// [[XXX -> [XXX
+// [LXXX; -> XXX
+// [I -> int
+func getComponentClassName(className string) string {
+	if className[0] == '[' {
+		componentTypeDescriptor := className[1:]
+		return toClassName(componentTypeDescriptor)
+	}
+	panic("Not array: " + className)
 }
 
 // [XXX => [XXX
@@ -33,17 +44,6 @@ func toDescriptor(className string) string {
 	}
 	// object
 	return "L" + className + ";"
-}
-
-// [[XXX -> [XXX
-// [LXXX; -> XXX
-// [I -> int
-func getComponentClassName(className string) string {
-	if className[0] == '[' {
-		componentTypeDescriptor := className[1:]
-		return toClassName(componentTypeDescriptor)
-	}
-	panic("Not array: " + className)
 }
 
 // [XXX  => [XXX

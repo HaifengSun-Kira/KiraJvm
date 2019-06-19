@@ -1,11 +1,12 @@
-package stack 
+package stack
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+)
 
-type SWAP struct {
-	base.NoOperandsInstruction
-}
+// Swap the top two operand stack values
+type SWAP struct{ base.NoOperandsInstruction }
 
 func (self *SWAP) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()

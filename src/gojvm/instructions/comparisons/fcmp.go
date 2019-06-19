@@ -1,19 +1,18 @@
 package comparisons
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+)
 
-type FCMPG struct {
-	base.NoOperandsInstruction
-}
+// Compare float
+type FCMPG struct{ base.NoOperandsInstruction }
 
 func (self *FCMPG) Execute(frame *rtda.Frame) {
 	_fcmp(frame, true)
 }
 
-type FCMPL struct {
-	base.NoOperandsInstruction
-}
+type FCMPL struct{ base.NoOperandsInstruction }
 
 func (self *FCMPL) Execute(frame *rtda.Frame) {
 	_fcmp(frame, false)

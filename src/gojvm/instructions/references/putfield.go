@@ -1,12 +1,13 @@
 package references
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
-import "gojvm/rtda/heap"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+	"gojvm/rtda/heap"
+)
 
-type PUT_FIELD struct {
-	base.Index16Instruction
-}
+// Set field in object
+type PUT_FIELD struct{ base.Index16Instruction }
 
 func (self *PUT_FIELD) Execute(frame *rtda.Frame) {
 	currentMethod := frame.Method()
@@ -14,6 +15,7 @@ func (self *PUT_FIELD) Execute(frame *rtda.Frame) {
 	cp := currentClass.ConstantPool()
 	fieldRef := cp.GetConstant(self.Index).(*heap.FieldRef)
 	field := fieldRef.ResolvedField()
+
 	if field.IsStatic() {
 		panic("java.lang.IncompatibleClassChangeError")
 	}
@@ -22,9 +24,11 @@ func (self *PUT_FIELD) Execute(frame *rtda.Frame) {
 			panic("java.lang.IllegalAccessError")
 		}
 	}
+
 	descriptor := field.Descriptor()
 	slotId := field.SlotId()
 	stack := frame.OperandStack()
+
 	switch descriptor[0] {
 	case 'Z', 'B', 'C', 'S', 'I':
 		val := stack.PopInt()
@@ -65,4 +69,3 @@ func (self *PUT_FIELD) Execute(frame *rtda.Frame) {
 		// todo
 	}
 }
-

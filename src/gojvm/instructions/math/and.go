@@ -1,11 +1,12 @@
 package math
 
-import "gojvm/instructions/base"
-import "gojvm/rtda"
+import (
+	"gojvm/instructions/base"
+	"gojvm/rtda"
+)
 
-type IAND struct {
-	base.NoOperandsInstruction
-}
+// Boolean AND int
+type IAND struct{ base.NoOperandsInstruction }
 
 func (self *IAND) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -15,9 +16,8 @@ func (self *IAND) Execute(frame *rtda.Frame) {
 	stack.PushInt(result)
 }
 
-type LAND struct {
-	base.NoOperandsInstruction
-}
+// Boolean AND long
+type LAND struct{ base.NoOperandsInstruction }
 
 func (self *LAND) Execute(frame *rtda.Frame) {
 	stack := frame.OperandStack()
@@ -26,4 +26,3 @@ func (self *LAND) Execute(frame *rtda.Frame) {
 	result := v1 & v2
 	stack.PushLong(result)
 }
-
